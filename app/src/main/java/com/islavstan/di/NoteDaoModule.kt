@@ -1,5 +1,6 @@
-package com.islavstan
+package com.islavstan.di
 
+import com.islavstan.model.NoteDao
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -9,6 +10,6 @@ class NoteDaoModule {
 
     @Provides
     @Singleton
-    fun provideNoteDao() : NoteDao= NoteDao()
+    fun provideNoteDao() : NoteDao = NoteDao()
 
 }

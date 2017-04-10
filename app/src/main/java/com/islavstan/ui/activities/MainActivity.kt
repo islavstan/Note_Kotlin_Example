@@ -1,9 +1,28 @@
-package com.islavstan
+package com.islavstan.ui.activities
 
+import android.os.Bundle
 import com.arellomobile.mvp.MvpActivity
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.islavstan.common.MvpAppCompatActivity
+import com.islavstan.kotlinexample.R
+import com.islavstan.model.Note
+import com.islavstan.presenters.MainPresenter
+import com.islavstan.views.MainView
+import kotlinx.android.synthetic.main.activity_main.*
+
+class MainActivity : MvpAppCompatActivity(), MainView {
+    @InjectPresenter
+    lateinit var mPresenter: MainPresenter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        fabButton.attachToRecyclerView(rvNotesList)
+    }
 
 
-class MainActivity : MvpActivity(), MainView{
+
+
     override fun onNotesLoaded(notes: List<Note>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

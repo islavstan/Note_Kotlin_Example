@@ -1,4 +1,4 @@
-package com.islavstan
+package com.islavstan.model
 
 import com.activeandroid.Model
 import com.activeandroid.annotation.Column
