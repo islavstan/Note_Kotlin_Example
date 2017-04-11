@@ -1,12 +1,14 @@
 package com.islavstan.ui.activities
 
 import android.os.Bundle
+import android.view.View
 import com.arellomobile.mvp.MvpActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.islavstan.common.MvpAppCompatActivity
 import com.islavstan.kotlinexample.R
 import com.islavstan.model.Note
 import com.islavstan.presenters.MainPresenter
+import com.islavstan.ui.adapter.NotesAdapter
 import com.islavstan.views.MainView
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -18,18 +20,28 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         fabButton.attachToRecyclerView(rvNotesList)
+
     }
 
 
 
 
     override fun onNotesLoaded(notes: List<Note>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+       rvNotesList.adapter = NotesAdapter(notes)
+        updateView()
     }
 
     override fun updateView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        rvNotesList.adapter.notifyDataSetChanged()
+        if (rvNotesList.adapter.itemCount == 0) {
+            rvNotesList.visibility = View.GONE
+            tvNotesIsEmpty.visibility = View.VISIBLE
+        } else {
+            rvNotesList.visibility = View.VISIBLE
+            tvNotesIsEmpty.visibility = View.GONE
+        }
     }
+
 
     override fun onSearchResult(notes: List<Note>) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
