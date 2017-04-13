@@ -9,7 +9,7 @@ class NoteDao {
 
     //создать новую заметку
     fun createNote(): Note {
-        var note = Note("новая заметка", Date())
+        var note = Note("New note", Date())
         note.save()
         return note
     }

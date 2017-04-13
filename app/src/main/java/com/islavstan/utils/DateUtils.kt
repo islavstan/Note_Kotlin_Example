@@ -1,6 +1,6 @@
 
 @file:JvmName("DateUtils")
-package com.islavstan
+package com.islavstan.utils
 
 import java.text.SimpleDateFormat
 import java.util.*

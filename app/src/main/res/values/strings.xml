@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">KotlinExample</string>
+    <string name="app_name">Kotlin Note</string>
+
+
+    <string-array name="main_note_context">
+        <item>Open</item>
+        <item>Info</item>
+        <item>Delete</item>
+    </string-array>
 </resources>

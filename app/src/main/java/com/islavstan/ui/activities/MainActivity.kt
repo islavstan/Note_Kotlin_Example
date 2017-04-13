@@ -1,10 +1,13 @@
 package com.islavstan.ui.activities
 
 import android.os.Bundle
+import android.support.v7.widget.SearchView
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.SearchView
+
+import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.arellomobile.mvp.MvpActivity
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.islavstan.common.MvpAppCompatActivity
@@ -20,6 +23,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : MvpAppCompatActivity(), MainView {
     @InjectPresenter
     lateinit var mPresenter: MainPresenter
+    private var mNoteContextDialog: MaterialDialog? = null
+    private var mNoteDeleteDialog: MaterialDialog? = null
+    private var mNoteInfoDialog: MaterialDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +46,8 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     }
 
 
-
-
     override fun onNotesLoaded(notes: List<Note>) {
-       rvNotesList.adapter = NotesAdapter(notes)
+        rvNotesList.adapter = NotesAdapter(notes)
         updateView()
     }
 
@@ -65,7 +69,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         return true
     }
 
-    private fun  initSearcView(menu: Menu) {
+    private fun initSearcView(menu: Menu) {
         var searchViewMenuItem = menu.findItem(R.id.action_search);
         var searchView = searchViewMenuItem.actionView as SearchView;
         searchView.onQueryChange { query -> mPresenter.search(query) }
@@ -89,34 +93,75 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     }
 
     override fun onAllNotesDeleted() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        updateView()
+        Toast.makeText(this, "All notes is deleted", Toast.LENGTH_SHORT).show()
     }
 
     override fun onNoteDeleted() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        updateView()
+        Toast.makeText(this, "Note is deleted", Toast.LENGTH_SHORT).show()
+
     }
 
     override fun showNoteInfoDialog(noteInfo: String) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mNoteInfoDialog = MaterialDialog.Builder(this)
+                .title("Note info")
+                .positiveText("Ок")
+                .content(noteInfo)
+                .onPositive { materialDialog, dialogAction -> mPresenter.hideNoteInfoDialog() }
+                .cancelListener { mPresenter.hideNoteInfoDialog() }
+                .show()
     }
 
+
+
     override fun hideNoteInfoDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mNoteInfoDialog?.dismiss()
     }
 
     override fun showNoteDeleteDialog(notePosition: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mNoteDeleteDialog = MaterialDialog.Builder(this)
+                .title("Delete note")
+                .content("Do you really want delete note?")
+                .positiveText("Yes")
+                .negativeText("No")
+                .onPositive { materialDialog, dialogAction ->
+                    mPresenter.deleteNoteByPosition(notePosition)
+                    mNoteInfoDialog?.dismiss()
+                }
+                .onNegative { materialDialog, dialogAction -> mPresenter.hideNoteDeleteDialog() }
+                .cancelListener { mPresenter.hideNoteDeleteDialog() }
+                .show()
     }
+
 
     override fun hideNoteDeleteDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mNoteDeleteDialog?.dismiss()
     }
 
+
     override fun showNoteContextDialog(notePosition: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mNoteContextDialog = MaterialDialog.Builder(this)
+                .items(R.array.main_note_context)
+                .itemsCallback { dialog, itemView, which, text ->
+                    onContextDialogItemClick(which, notePosition)
+                    mPresenter.hideNoteContextDialog()
+                }
+                .cancelListener { mPresenter.hideNoteContextDialog() }
+                .show()
+
     }
 
     override fun hideNoteContextDialog() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mNoteContextDialog?.dismiss()
+    }
+
+
+    fun onContextDialogItemClick(contextItemPosition: Int, notePosition: Int) {
+        when (contextItemPosition) {
+            0 -> mPresenter.openNote(this, notePosition)
+            1 -> mPresenter.showNoteInfo(notePosition)
+            2 -> mPresenter.showNoteDeleteDialog(notePosition)
+        }
     }
 }

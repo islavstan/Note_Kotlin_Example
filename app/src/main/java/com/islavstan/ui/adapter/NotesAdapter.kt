@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.islavstan.formatDate
+import com.islavstan.utils.formatDate
 import com.islavstan.kotlinexample.R
 import com.islavstan.model.Note
 import java.util.*
